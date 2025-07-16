@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<!--
+	ToluOmotayo
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ToluOmotayo</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo"> Case Study</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li class="active" ><a href="index.html"> Projects</a></li>
+							<li><a href="generic.html">Case Study</a></li>
+							<li><a href="elements.html">Blog</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://github.com/Toluomotayo" class="icon brands fa-github"><span class="label">Github</span></a></li>
+							<li><a href="https://www.linkedin.com/in/toluomotayo/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://medium.com/@Toluomotayo" class="icon brands fa-medium"><span class="label">Medium</span></a></li>
+							<li><a href="https://public.tableau.com/app/profile/toluomotayo/vizzes" class="icon brands fa-Tableau"><span class="label">Tableau</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<span class="date"></span>
+									<h2>Hospital Charge Analysis</h2>
+									<p>A structured end-to-end data analysis project exploring U.S. hospital charge variations using SQL, Excel, and Power BI for actionable healthcare insights.</p>
+								</header>
+								<p><strong>Introduction</strong></br>Inpatient healthcare costs in the United States vary widely depending on hospital, location, and type of treatment. This case study focuses on analyzing publicly available hospital charge data to uncover pricing variations, identify high-cost providers, and highlight the gap between hospital charges and Medicare payments. The objective is to support cost transparency, patient decision-making, and policy-level healthcare planning.</br>
+								<p><strong>Tools Used:</strong></br>1. SQL (MySQL)– for data extraction, cleaning, and querying</br>2. Excel– for pre-cleaning and formatting before loading into SQL</br>3. Power BI– for interactive dashboard creation and visual insights
+								<p><strong>Problem</strong></br> Inpatient hospital charges vary widely across hospitals and states, creating confusion for patients, insurance companies, and healthcare regulators.</br>
+								<strong>Goals</strong></br>
+								1. Identify hospitals and states with unusually high or low charges.</br>
+								2. Measure the gap between what hospitals charge and what Medicare pays.</br>
+								3. Highlight the most common diagnoses associated with high discharge volumes and charges.</p>
+								<p><strong>Question 1</strong></br>Which hospitals charge the most for inpatient services?</br>
+								<strong>Query</strong></br>
+								<pre><code>
+# Identifying High-Cost Hospitals
+select provider_name, provider_city, provider_state, 
+       concat('$', format(round(avg(average_covered_charges), 2), 2)) as avg_covered_charges
+from inpatient_charges
+group by provider_name, provider_city, provider_state
+order by avg_covered_charges desc
+limit 10;
+</code></pre>
+								<strong>Visualization</strong>
+								<div class="image main"><img src="images/Case 1.png" alt="" style="width: 80%; height: auto; margin-left: 10%; margin-right: 10%;"/></div>
+								<strong>Reasoning:</strong> Helps patients and insurers choose cost-effective providers; highlights potential overpricing. </p>
+								<p><strong>Question 2</strong></br>Which states have the highest average hospital charges?</br>
+								<strong>Query</strong></br>
+								<pre><code>
+# Understanding Pricing Differences Across States
+select provider_state, 
+       concat('$', format(round(avg(average_covered_charges), 2), 2)) as avg_state_charges
+from inpatient_charges
+group by provider_state
+order by avg_state_charges desc;
+</code></pre>
+								<strong>Visualization</strong>
+								<div class="image main"><img src="images/Case 2.png" alt="" style="width: 80%; height: auto; margin-left: 10%; margin-right: 10%;"/></div>
+								<strong>Reasoning:</strong> Useful for public health and state-level policy decisions on healthcare costs.</p>
+								<p><strong>Question 3</strong></br>What is the gap between hospital charges and Medicare payments?</br>
+								<strong>Query</strong></br>
+								<pre><code>
+# Analyzing Profit Gaps Between Hospital
+select provider_name, 
+       concat('$', format(round(avg(average_covered_charges - average_medicare_payments), 2), 2)) as charge_medicare_gap
+from inpatient_charges
+group by provider_name
+order by charge_medicare_gap desc
+limit 10;
+</code></pre>
+								<strong>Visualization</strong>
+								<div class="image main"><img src="images/Case 3.png" alt="" style="width: 80%; height: auto; margin-left: 10%; margin-right: 10%;"/></div>
+								<strong>Reasoning:</strong> Shows potential profit margins and flags pricing practices that may need regulation.</p>
+								<p><strong>Question 4</strong></br>What are the most common inpatient diagnoses by discharge volume?</br>
+								<strong>Query</strong></br>
+								<pre><code>
+# Finding the Most Common Diagnoses by Volume
+select drg_definition, 
+       sum(total_discharges) as total_discharges
+from inpatient_charges
+group by drg_definition
+order by total_discharges desc
+limit 10;
+</code></pre>
+								<strong>Visualization</strong>
+								<div class="image main"><img src="images/Case 4.png" alt="" style="width: 80%; height: auto; margin-left: 10%; margin-right: 10%;"/></div>
+								<strong>Reasoning:</strong> Focuses attention on high-impact areas for both clinical management and cost reduction.</p>
+								<p><strong> Hospital Charge Analysis Dashboard</strong></p>
+								<div class="image main"><img src="images/Case 5.png" alt="" style="width: 80%; height: auto; margin-left: 10%; margin-right: 10%;"/></div>
+								<p><strong>Insights</strong></br>
+								1. High-Cost Hospitals: The top 10 most expensive hospitals for inpatient services are mostly located in California and New Jersey, with average covered charges close to $100,000. This shows clear geographical pricing disparities in U.S. healthcare.</br>
+								2. State-Level Price Variation: California ($67,508.62) and New Jersey ($66,125.69) have the highest state-wide average hospital charges, while Maryland has the lowest ($13,377.80). This suggests certain states may require closer regulatory review regarding healthcare costs.</br>
+								3. Significant Profit Gaps: Some hospitals show extreme gaps between what they charge and what Medicare reimburses. For example, University of California Davis Medical Center and Providence Holy Cross Medical Center show charge-to-Medicare payment gaps above $97,000, suggesting potential overcharging or pricing inconsistencies.</br>
+								4. Common Diagnoses: The most frequent inpatient diagnosis is related to joint replacement procedures, followed by septicemia and kidney-related conditions. These high-volume services present key focus areas for both cost control and healthcare management.</p>
+								<p><strong>Recommendations</strong></br>
+								1. For Regulators: Focus healthcare pricing audits and transparency initiatives on high-cost states like California and New Jersey, as well as hospitals with unusually high charge-to-Medicare payment gaps.</br>
+								2. For Healthcare Providers: Re-evaluate pricing strategies for the most common and high-volume diagnoses, such as joint replacements and septicemia, to ensure fair and competitive billing practices.</br>
+								3. For Patients and Insurers: Use available hospital charge data when choosing service providers, especially for high-cost procedures, to reduce unnecessary financial burden and improve decision-making.</p>
+								<p><strong>Challenges Faced and Lessons Learned</strong></br>
+								- Large file processing delays during MySQL import, solved by pre-cleaning in Excel.<br>
+								- Dollar symbols in monetary fields caused SQL errors, handled by formatting the data before loading.<br>
+								- No date column available, so I focused on cross-sectional analysis instead of time trends.<br>
+								- Learned the importance of structuring queries around business questions, not just raw SQL output.</p>
+								<p>Dataset Source:<a href="https://www.kaggle.com/datasets/speedoheck/inpatient-hospital-charges/data"> Kaggle</a> (originally from data.gov)</br>
+								This project is on my <a href="https://github.com/Toluomotayo/Hospital-Charge-Analysis"> GitHub Repository</a>.</p>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section class="alt">
+								<h3>Location</h3>
+								<p>Lagos, Nigeria.<br />
+								</p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p><a href="https://linktr.ee/toluomotayo">+2348108376224</a></p>
+							</section>
+							<section>
+								<h3>Email</h3>
+								<p><a href="https://linktr.ee/toluomotayo">Olarewajutolulope26@gmail.com</a></p>
+							</section>
+							<section>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="https://github.com/Toluomotayo" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+									<li><a href="https://www.linkedin.com/in/toluomotayo/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+									<li><a href="https://medium.com/@Toluomotayo" class="icon brands fa-medium"><span class="label">Medium</span></a></li>
+									<li><a href="https://public.tableau.com/app/profile/toluomotayo/vizzes" class="icon brands fa-Tableau"><span class="label">Tableau</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; ToluOmotayo</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
